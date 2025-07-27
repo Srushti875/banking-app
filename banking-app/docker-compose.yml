@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  springboot-app:
+    build: .
+    container_name: springboot-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/banking_app
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Pass@1234
+      JWT_SECRET: YXNkZmdoamtscXdlcnR5dWlvcGFzZGZnaGprbHF3ZXJ0eXVpbw==
+      JWT_EXPIRATION: 86400000
+    ports:
+      - "8080:8080"
+    networks:
+      - banking-network
+
+networks:
+  banking-network:

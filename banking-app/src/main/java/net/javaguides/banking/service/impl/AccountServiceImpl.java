@@ -1,5 +1,4 @@
 package net.javaguides.banking.service.impl;
-
 import net.javaguides.banking.dto.AccountDto;
 import net.javaguides.banking.dto.TransferRequestDto;
 import net.javaguides.banking.entity.Account;
@@ -23,7 +22,6 @@ import jakarta.transaction.Transactional;
 @Service
 public class AccountServiceImpl implements AccountService
 {
-
     private AccountRepository accountRepository;
     private TransactionRepository transactionRepository;
 
@@ -32,7 +30,6 @@ public class AccountServiceImpl implements AccountService
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
     }
-
     @Override
     public AccountDto createAccount(AccountDto accountDto)
     {
@@ -40,10 +37,7 @@ public class AccountServiceImpl implements AccountService
        Account savedAccount = accountRepository.save(account);
        return AccountMapper.mapToAccountDto(savedAccount);
     }
-
-
-
- @Override
+   @Override
     public AccountDto getAccountById(Long id) 
     {
         Account account = accountRepository
@@ -52,9 +46,6 @@ public class AccountServiceImpl implements AccountService
           return AccountMapper.mapToAccountDto(account);                  
 
     }
-
-
-
     @Override
     @Transactional
     public AccountDto deposit(Long id, double amount) 

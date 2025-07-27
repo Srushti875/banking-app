@@ -27,9 +27,19 @@ public class JwtFilter extends OncePerRequestFilter
     private CustomUserDetailsService userDetailsService;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        System.out.println("Checking filter exclusion for: " + request.getServletPath());
+        return path.equals("/api/accounts/login") || path.matches("/api/accounts/\\d+/register");
+    }
+
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException, java.io.IOException 
     {
+        System.out.println("Checking filter exclusion for: " + request.getServletPath());
+
 
         String authHeader = request.getHeader("Authorization");
         String token = null;

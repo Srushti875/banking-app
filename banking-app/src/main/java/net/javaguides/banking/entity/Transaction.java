@@ -1,8 +1,6 @@
 package net.javaguides.banking.entity;
 import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,14 +14,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Transaction 
-{   @Id
+{  
+     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
@@ -32,7 +30,7 @@ public class Transaction
     private Account account;
     private Double balance;
     @Enumerated(EnumType.STRING)
-@Column(name = "transaction_type")
+    @Column(name = "transaction_type")
     private TransactionType type;
     private LocalDateTime  timestamp;   
 }

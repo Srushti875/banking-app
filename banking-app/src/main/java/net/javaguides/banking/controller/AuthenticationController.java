@@ -1,5 +1,4 @@
 package net.javaguides.banking.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,7 @@ import net.javaguides.banking.service.CustomUserDetailsService;
 import net.javaguides.banking.service.jwtutil;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/accounts")
 public class AuthenticationController {
 
     @Autowired
@@ -29,6 +29,9 @@ public class AuthenticationController {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    private UserRepository user;
 
     @Autowired
 private PasswordEncoder passwordEncoder;
@@ -40,30 +43,35 @@ private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/register")
-public ResponseEntity<String> register(@RequestBody User user) 
+    @PostMapping("/{id}/register")
+public ResponseEntity<String> register(@PathVariable Long id,@RequestBody User user) 
 
 {
-   
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-    user.setRole(Role.ROLE_USER); // or admin
-    userRepository.save(user);
-    return ResponseEntity.ok("User registered successfully!");
+        user.setId(id);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.ROLE_USER); // or admin
+        userRepository.save(user);
+        return ResponseEntity.ok("User registered successfully!");
 }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody loginRequest request) {
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-        );
+        System.out.println("Inside /login controller");
+        System.out.println("Password matches: " +
+    passwordEncoder.matches("Pass@123", "$2a$10$q6t0xt/8w4ez8MoCefyISOXgs5s2ovs.s.Y3D1gCDtOsui7zMH6Ba"));
+    System.out.println(passwordEncoder.encode("Pass@123"));
+    System.out.println(user.findAll());
 
-       
-        UserDetails userDetails = userDetailsService.loadUserByUsername((String) request.getUsername());
-        String token = jwtUtil.generateToken(userDetails);
+       authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+    );
+    System.out.println("a");
 
-        
+    UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+    System.out.println("b");
+    String token = jwtUtil.generateToken(userDetails);
+    System.out.println("apple"+token);
 
-
-        return ResponseEntity.ok(new AuthResponse(token));
+    return ResponseEntity.ok(new AuthResponse(token));
     }
 }

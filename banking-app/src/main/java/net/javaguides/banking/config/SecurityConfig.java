@@ -30,12 +30,19 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/auth/**").permitAll()
+            // Public endpoints first
+            .requestMatchers("/api/accounts/login").permitAll()
+            .requestMatchers("/api/accounts/*/register").permitAll()
+            .requestMatchers("/", "/api/auth/**").permitAll()
+
+            // Protected endpoints
             .requestMatchers("/api/admin/**").hasRole("ADMIN")
-           .requestMatchers("/api/accounts/**").authenticated()
-            .anyRequest().denyAll() // Optional: deny all other requests
+            .requestMatchers("/api/accounts/**").authenticated()
+
+            // Default deny
+            .anyRequest().denyAll()
         )
-        .sessionManagement(sess -> 
+        .sessionManagement(sess ->
             sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 

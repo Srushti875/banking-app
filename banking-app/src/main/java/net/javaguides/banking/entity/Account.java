@@ -35,6 +35,8 @@ public class Account
     @JsonManagedReference
     private List<Transaction> transactions = new ArrayList<>();
 
-    
+    @ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "user_id")  // Foreign key in accounts table
+private User user;
 
 }

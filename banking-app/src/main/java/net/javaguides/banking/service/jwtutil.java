@@ -1,5 +1,6 @@
 package net.javaguides.banking.service;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
@@ -10,10 +11,11 @@ import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import net.javaguides.banking.entity.User;
-
+import io.jsonwebtoken.io.Decoders;
 
 @Component
 public class jwtutil 
@@ -30,9 +32,40 @@ public class jwtutil
 
         @PostConstruct
         public void init()
-        {
-            this.key=Keys.hmacShaKeyFor(secret.getBytes());
-        }
+         {
+        //     try
+        //     {
+            byte[] keyBytes = Decoders.BASE64.decode(secret);
+        //    // 
+
+        //     if (keyBytes.length < 32) 
+        //     {
+        //     throw new IllegalArgumentException("JWT secret key is too short. Must be at least 256 bits (32 bytes).");
+        //     }
+        //         this.key = Keys.hmacShaKeyFor(keyBytes);
+        //     }
+        // this.key = Keys.hmacShaKeyFor(keyBytes);
+        // }
+        //  catch (Exception e) 
+        //  {
+        // throw new RuntimeException("Failed to initialize JWT key: " + e.getMessage(), e);
+        // }
+        // try {
+        // byte[] keyBytes = Decoders.BASE64.decode(secret);
+        // if (keyBytes.length < 32)
+        //  {
+        //     throw new IllegalArgumentException("JWT secret key is too short. Must be at least 256 bits (32 bytes).");
+        // }
+        // this.key = Keys.hmacShaKeyFor(keyBytes);
+        // } 
+        // catch (Exception e) 
+        // {
+        // throw new RuntimeException("Failed to initialize JWT key: " + e.getMessage(), e);
+        //  }
+           
+        // }
+        this.key = Keys.hmacShaKeyFor(keyBytes);
+         }
 
       
 
@@ -57,6 +90,5 @@ public class jwtutil
     public boolean validateToken(String token, UserDetails userDetails) {
         return extractUsername(token).equals(userDetails.getUsername());
     }
-    
     }  
 
